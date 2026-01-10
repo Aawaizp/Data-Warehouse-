@@ -1,60 +1,91 @@
-/*
-===============================================================================
-PostgreSQL: Load Bronze Layer (Source -> Bronze)
-===============================================================================
-Script Purpose:
-    This script loads data into the 'bronze' schema from external CSV files.
-    It performs the following actions:
-    - Truncates the bronze tables before loading data.
-    - Uses client-side \copy command to load data from CSV files to bronze tables.
-    - Tracks the start and end time of each load.
-
-Note:
-    1. This script is for PostgreSQL 13+.
-    2. \copy is a psql (client-side) command. It works in pgAdmin Query Tool or psql.
-    3. The CSV files must be accessible from your local machine (client), not the server.
-
-Manual Import Notes (for Git documentation):
-    - Right-click the target table in pgAdmin → Import/Export.
-    - Select CSV file path.
-    - Format: CSV
-    - Check "Header" if CSV has column names.
-    - Delimiter: ,
-    - Quote: "
-    - Click OK to load.
-    - Repeat for all bronze tables.
-===============================================================================
-*/
 -- ============================================================================
--- PostgreSQL: Load Bronze Layer (Source -> Bronze)
+-- DDL Script: Create Bronze Tables (PostgreSQL)
 -- ============================================================================
--- This script truncates and loads CSV data into bronze tables.
--- Note: \copy is a client-side command. Run in pgAdmin Query Tool or psql.
+-- Script Purpose:
+--     This script creates tables in the 'bronze' schema,
+--     dropping existing tables if they already exist.
+--     Run this script to re-define the DDL structure of 'bronze' tables
 -- ============================================================================
 
--- CRM Tables
-TRUNCATE TABLE bronze.crm_cust_info;
-\copy bronze.crm_cust_info(cst_id, cst_key, cst_firstname, cst_lastname, cst_marital_status, cst_gndr, cst_create_date)
-FROM 'C:/sql/dwh_project/datasets/source_crm/cust_info.csv' WITH (FORMAT csv, HEADER, DELIMITER ',', QUOTE '"');
+-- Ensure schema exists
+CREATE SCHEMA IF NOT EXISTS bronze;
 
-TRUNCATE TABLE bronze.crm_prd_info;
-\copy bronze.crm_prd_info(prd_id, prd_name, prd_category)
-FROM 'C:/sql/dwh_project/datasets/source_crm/prd_info.csv' WITH (FORMAT csv, HEADER, DELIMITER ',', QUOTE '"');
+-- ----------------------------
+-- CRM Customer Info
+-- ----------------------------
+DROP TABLE IF EXISTS bronze.crm_cust_info;
 
-TRUNCATE TABLE bronze.crm_sales_details;
-\copy bronze.crm_sales_details(sale_id, cst_id, prd_id, sale_date, sale_amount)
-FROM 'C:/sql/dwh_project/datasets/source_crm/sales_details.csv' WITH (FORMAT csv, HEADER, DELIMITER ',', QUOTE '"');
+CREATE TABLE bronze.crm_cust_info (
+    cst_id             INTEGER,
+    cst_key            VARCHAR(50),
+    cst_firstname      VARCHAR(50),
+    cst_lastname       VARCHAR(50),
+    cst_marital_status VARCHAR(50),
+    cst_gndr           VARCHAR(50),
+    cst_create_date    DATE
+);
 
--- ERP Tables
-TRUNCATE TABLE bronze.erp_loc_a101;
-\copy bronze.erp_loc_a101(loc_id, loc_name, loc_region)
-FROM 'C:/sql/dwh_project/datasets/source_erp/loc_a101.csv' WITH (FORMAT csv, HEADER, DELIMITER ',', QUOTE '"');
+-- ----------------------------
+-- CRM Product Info
+-- ----------------------------
+DROP TABLE IF EXISTS bronze.crm_prd_info;
 
-TRUNCATE TABLE bronze.erp_cust_az12;
-\copy bronze.erp_cust_az12(cust_id, cust_name, cust_region)
-FROM 'C:/sql/dwh_project/datasets/source_erp/cust_az12.csv' WITH (FORMAT csv, HEADER, DELIMITER ',', QUOTE '"');
+CREATE TABLE bronze.crm_prd_info (
+    prd_id       INTEGER,
+    prd_key      VARCHAR(50),
+    prd_nm       VARCHAR(50),
+    prd_cost     INTEGER,
+    prd_line     VARCHAR(50),
+    prd_start_dt TIMESTAMP,
+    prd_end_dt   TIMESTAMP
+);
 
-TRUNCATE TABLE bronze.erp_px_cat_g1v2;
-\copy bronze.erp_px_cat_g1v2(cat_id, cat_name, cat_group)
-FROM 'C:/sql/dwh_project/datasets/source_erp/px_cat_g1v2.csv' WITH (FORMAT csv, HEADER, DELIMITER ',', QUOTE '"');
+-- ----------------------------
+-- CRM Sales Details
+-- ----------------------------
+DROP TABLE IF EXISTS bronze.crm_sales_details;
 
+CREATE TABLE bronze.crm_sales_details (
+    sls_ord_num  VARCHAR(50),
+    sls_prd_key  VARCHAR(50),
+    sls_cust_id  INTEGER,
+    sls_order_dt INTEGER,
+    sls_ship_dt  INTEGER,
+    sls_due_dt   INTEGER,
+    sls_sales    INTEGER,
+    sls_quantity INTEGER,
+    sls_price    INTEGER
+);
+
+-- ----------------------------
+-- ERP Location
+-- ----------------------------
+DROP TABLE IF EXISTS bronze.erp_loc_a101;
+
+CREATE TABLE bronze.erp_loc_a101 (
+    cid   VARCHAR(50),
+    cntry VARCHAR(50)
+);
+
+-- ----------------------------
+-- ERP Customer
+-- ----------------------------
+DROP TABLE IF EXISTS bronze.erp_cust_az12;
+
+CREATE TABLE bronze.erp_cust_az12 (
+    cid   VARCHAR(50),
+    bdate DATE,
+    gen   VARCHAR(50)
+);
+
+-- ----------------------------
+-- ERP Product Category
+-- ----------------------------
+DROP TABLE IF EXISTS bronze.erp_px_cat_g1v2;
+
+CREATE TABLE bronze.erp_px_cat_g1v2 (
+    id          VARCHAR(50),
+    cat         VARCHAR(50),
+    subcat      VARCHAR(50),
+    maintenance VARCHAR(50)
+);
