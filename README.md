@@ -1,84 +1,79 @@
-# Data-Warehouse-
-Overview
-This project implements an end-to-end Data Warehouse solution using PostgreSQL.
-It follows industry-standard Data Engineering practices to transform raw data into analytics-ready datasets using a layered architecture.
+# Data Warehouse Project (PostgreSQL)
 
-The project is designed to support reporting, analysis, and business intelligence use cases.
+## Overview
+This project demonstrates an end-to-end Data Warehouse implementation using PostgreSQL.
+It follows standard Data Engineering practices to transform raw source data into clean,
+analytics-ready datasets using a layered architecture.
 
-🏗️ Architecture
+The final output is a business-ready Gold layer designed for reporting and analytical use cases.
+
+---
+
+## Architecture
 The Data Warehouse follows the Medallion Architecture:
 
-Source Data (CSV Files)
-→ Bronze Layer (Raw Data)
-→ Silver Layer (Cleaned and Standardized Data)
+Source Data (CSV Files)  
+→ Bronze Layer (Raw Data)  
+→ Silver Layer (Cleaned & Standardized Data)  
 → Gold Layer (Business-Ready Data)
 
-🧱 Layers Description
+---
 
-🥉 Bronze Layer
+## Layers Description
 
-Stores raw data ingested from source files
+### Bronze Layer
+- Stores raw data ingested directly from source files
+- No transformations applied
+- Serves as the source of truth
 
-No transformations applied
+### Silver Layer
+- Cleans and standardizes raw data
+- Handles null values, data types, and formatting
+- Applies basic business rules
+- Prepares data for analytics
 
-Acts as the source of truth
-
-🥈 Silver Layer
-
-Data cleaning and standardization
-
-Handling null values and data types
-
-Business rules applied
-
-Prepares data for analytics
-
-🥇 Gold Layer
-
-Final consumption layer
-
-Designed using Star Schema
-
-Contains dimension and fact views
-
-Optimized for reporting and analytics
+### Gold Layer
+- Final consumption layer
+- Designed using Star Schema
+- Contains dimension and fact views
+- Optimized for reporting and BI tools
 
 Gold Layer Objects:
+- Dimension: Customers
+- Dimension: Products
+- Fact: Sales
 
-Dimension Tables: Customers, Products
+---
 
-Fact Table: Sales
+## Tech Stack
+- Database: PostgreSQL
+- SQL Concepts Used:
+  - Views
+  - Window Functions (ROW_NUMBER)
+  - Joins
+  - Star Schema Modeling
+- Architecture Pattern: Medallion Architecture
 
-🛠️ Tech Stack
+---
 
-Database: PostgreSQL
+## Project Structure
+- bronze: raw data tables
+- silver: cleaned and transformed tables
+- gold: dimension and fact views
+- README.md
 
-SQL Features Used:
+---
 
-Views
+## Key Learnings
+- Data Warehouse design principles
+- Medallion Architecture implementation
+- Star Schema modeling
+- Analytical SQL using PostgreSQL
+- Real-world Data Engineering project structure
 
-Window Functions (ROW_NUMBER)
+---
 
-Joins
-
-Star Schema Modeling
-
-Architecture Pattern: Medallion Architecture
-
-📂 Project Structure
-bronze – raw data tables
-silver – cleaned and transformed tables
-gold – dimension and fact views
-README.md
-
-🎯 Key Learnings
-
-Data Warehouse design principles
-
-Medallion Architecture implementation
-
-Star Schema modeling
-
-Analytical SQL using PostgreSQL
-
-Real-world Data Engineering project structure
+## Project Status
+Completed  
+PostgreSQL based  
+Interview-ready Data Warehouse project
